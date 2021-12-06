@@ -1,0 +1,772 @@
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.142.0.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link href="https://s3.amazonaws.com/mturk-public/bs30/css/bootstrap.min.css" rel="stylesheet" />
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+<script src="//uniqueturker.myleott.com/lib.js" type="text/javascript"></script>
+<script type="text/javascript">
+(function(){
+    var ut_id = "1675f66be04915828af4649e3abe9154";
+    if (UTWorkerLimitReached(ut_id)) {
+        document.getElementById('mturk_form').style.display = 'none';
+        document.getElementsByTagName('body')[0].innerHTML = "You have already completed the maximum number of HITs allowed by this requester. Please click 'Return HIT' to avoid any impact on your approval rating.";
+    }
+})();
+</script>
+
+
+<style type="text/css">
+  /* Clear floats after the columns */
+  .predefined_div{
+    text-align: center;
+    border: solid 2px black;
+    padding: 5px;
+    margin-bottom: 20px;
+    margin-top: 18px;
+  }
+  .predefined_div input{
+      width:100px;
+      height:40px;
+      margin:0;
+  }
+  .predefined_div label{
+      font-weight: bold;
+      color: black;
+  }
+  .predefined_div a{
+    line-height: 30px;
+    font-size: 16px;
+  }
+  #predefined_steps_error{
+    color: red;
+    padding: 10px;
+    font-size: 15px;
+  }
+  .save_div label{
+  font-weight:bold;
+  }
+  #save:disabled, #save[disabled]{
+      background-color: gray;
+      color:black;
+      border-color:gray;
+  }
+  .alert.warning {
+    background-color: #ff9800;
+    }
+    
+  .alert {
+    font-size:15px;
+    padding: 20px;
+    background-color: #f44336;
+    color: white;
+    margin-bottom: 15px;
+    }
+.record_info{
+display: inline-block;
+padding: 4px 12px;
+margin-bottom: 0;
+vertical-align: middle;
+line-height: 20px;
+font-size: 14px;
+      margin: 0 2px;
+          color: #006dcc;
+    background-color: white;
+    border-color: white;
+    font-weight: bold;
+}
+.scc div {
+  display: flex;
+  padding: .5em 0;
+  gap: 5px;
+}
+.scc label { flex: 2; }
+.scc input[type="range"] { flex: 5; }
+.scc span {
+  flex: 1;
+  text-align: center;
+}
+  .centered_element{
+      text-align:center;
+  }
+  video{
+      width:100%;
+      display: block;
+  }
+  .addstep{
+      padding-bottom:20px;
+  }
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  inline-field input,
+  .inline-field label {
+    display: inline-block;
+    margin-bottom: 0;
+    /* I added this after I posted my reply */
+    vertical-align: middle;
+    /* Fixes any weird issues in Firefox and IE */
+  }
+  .step_by_step_record li{
+      padding: 5px;
+      counter-reset: elementcounter;
+      font-size:0px;
+  }
+  
+  .intention_record li, .summary_record li{
+      padding: 5px;
+      font-size:0px;
+  }
+  
+  li>a.btn{
+      margin: 0 2px;
+  }
+  
+    .save_div{
+    padding: 15px;
+    }
+    .save_div a{
+    padding: 10px 30px;  
+    }
+    p{
+    margin: 0 10px 10px;
+    }
+    .lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 14px;
+  vertical-align:middle;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 0px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #006dcc;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+    
+</style>
+
+<section class="container" id="TaggingOfAnImage"
+  style="margin-bottom:15px; padding: 10px 10px; font-family: Verdana, Geneva, sans-serif; color:#333333; font-size:0.9em;">
+  <!-- Load Font Awesome Icon Library -->
+</section>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+<section class="container" id="Other"
+  style="margin-bottom:15px; padding: 10px 10px; font-family: Verdana, Geneva, sans-serif; color:#333333; font-size:0.9em;">
+  <div class="row col-xs-12 col-md-12">
+    <!-- Instructions -->
+    <div class="panel panel-primary">
+      <div class="panel-heading"><strong>Instructions</strong></div>
+
+      <div class="panel-body">
+
+       
+        <p>Please watch this <strong>video of a robot performing a task</strong> and record <strong>audio answers </strong>to the different prompts. In this HIT, your voice (and ambient environment noises) will be recorded and stored. By performing this HIT, you agree that<font color="red"> you have read the
+            description of the study being undertaken, and give consent for the data you enter to be used for research.
+          </font>&nbsp;Please <a target="blank" href="http://iral.cs.umbc.edu/ConsentForm_Speech-approved.pdf">read the consent
+            form</a>. If you would prefer not to take part in this experiment, please return this HIT.</p>
+
+        <p><strong>Please do the following:</strong></p>
+
+        <ul>
+          <li><strong> Watch the video.</strong></li>
+          <li><strong> Record step-by-step instructions that describe the robot's actions as if you were directing another person.</strong></li>
+          <li><strong> Record a high-level description of the broad task that the robot accomplished in the video.</strong></li>
+           <li><strong> Record an explanation of the human intent behind the robot's actions in the video. Why would you want the robot to perform this task?</strong></li>
+          <li><strong> Use complete sentences.</strong></li>
+          <li> Before you start the HIT, please make sure that your browser has adequate microphone access permission.</li>
+          <li> Make sure to playback the recordings before submitting.</li>
+          <li> Please record again if you find the recordings not clear.</li>
+          <li><strong> Please use a MICROPHONE and record in a QUIET environment</strong></li>
+        </ul>
+        
+        <p><strong>Please do not:</strong></p>
+        <ul>
+          <li><strong> Submit empty, inaudible or irrelevant recordings.</strong></li>
+        </ul>
+        
+        <p>If you are not satisfied with a recording, you can always record again and save the new one.</p>
+        <p><strong>Any hit that does not follow these rules will be <span style="color:red">rejected!</span></strong></p>
+      </div>
+    </div>
+    <!-- End Instructions -->
+    <!-- Content Body -->
+    
+    <div class="alert warning">
+        <i class="icon-warning-sign"></i>
+    <strong>Remember,</strong> 
+    <ul>
+    <li>empty recordings,</li>
+    <li>inaudible recordings, and</li>
+    <li>irrelevant recordings</li>
+    </ul>
+    will lead to HIT rejection. Make sure to playback the recordings before submitting. </strong>
+
+    </div>
+    
+    <div class="row">
+
+      <!--p>Do you agree with the consent form??<span id="cke_bm_206E">&nbsp;</span></p>
+      <input type="radio" name="agree_consent" value="Yes" required checked> Yes<br>
+      <input type="radio" name="agree_consent" value="No"> no<br-->
+    <div class="col col-md-6 scc">
+         <div>
+	   <label for="pbrate">Playback Speed:</label>
+ 	   <input type="range" id="pbrate" min=.5 max=3 value=1 step=.1>
+   	   <span></span>
+     </div>
+          <video width="500" height="500" controls>
+                <source src="${video_url}" type="video/mp4">
+                Your browser does not support the video tag.
+          </video>
+    </div>
+    <div class="col col-md-6" id="scenario_form">
+      <p>&nbsp;</p>
+    <div class="predefined_div">
+        <label for="predefined_steps">Before you start, how many steps would you need to describe the robot's actions in the video? You can increase or decrease this number later.</label>
+        <input type="number" id="predefined_steps" name="predefined_steps" class="form-control" >
+        <a href="javascript:void(0)" id="predefined_steps_submit" class="btn btn-primary">Start</a>
+        <div id="predefined_steps_error"></div>
+    </div>
+    <div class="step_by_step_record record_div">
+    <p><strong>Please record step-by-step instructions that describe the robot's actions. What constitutes a "step" is left to your discretion. Add as many steps as necessary to describe the actions.</strong></p>
+    <ol id="step_by_step_list">
+        <li>      
+            <a href="javascript:void(0)" id="record_step_1" class="btn btn-info record record_step">Record</a>
+            <a href="javascript:void(0)" id="stop_step_1" class="btn btn-danger hidden stop stop_step" disabled>Stop</a>
+            <a href="javascript:void(0)" id="play_step_1" class="btn btn-success hidden play play_step" disabled>Play</a>
+            <div id="record_info_step_1" class="record_info"></div>
+        </li>
+    </ol>
+    <div class="addstep centered_element">
+    <a href="javascript:void(0)" id="addstepButton" class="btn btn-add add"><i class="fa fa-plus"></i> Add Step</a>
+    </div>
+    </div>
+    
+    <div class="summary_record record_div">
+    <p><strong>Please record a high-level summary of the robot's actions (e.g. the robot cleaned the table.).</strong></p>
+    <ul>
+        <li>
+            <a href="javascript:void(0)" id="record_summary" class="btn btn-info record">Record</a>
+            <a href="javascript:void(0)" id="stop_summary" class="btn btn-danger hidden stop" disabled>Stop</a>
+            <a href="javascript:void(0)" id="play_summary" class="btn btn-success hidden play" disabled>Play</a>
+            <div id="record_info_summary" class="record_info"></div>
+        </li>
+    </ul>
+    </div>
+    
+    <div class="intention_record record_div">
+    <p><strong>Why would you want the robot to do this task? Please record your explanation (e.g. I want my table to be clean.).</strong></p>
+    <ul>
+        <li>
+            <a href="javascript:void(0)" id="record_intention" class="btn btn-info record">Record</a>
+            <a href="javascript:void(0)" id="stop_intention" class="btn btn-danger hidden stop" disabled>Stop</a>
+            <a href="javascript:void(0)" id="play_intention" class="btn btn-success hidden play" disabled>Play</a>
+            <div id="record_info_intention" class="record_info"></div>
+        </li>
+    </ul>
+    <div class="save_div centered_element">
+       <label for="save">Please include recordings for each input.</label>
+       <a href="javascript:void(0)" id="save" class="btn btn-primary save" disabled>Submit</a>
+    </div>
+    </div>
+
+      <p>&nbsp;</p>
+
+      <div class="form-group">
+    	  <div id="tag_error" class="tag_error"></div>
+        <b>
+          <input class="form-control" name="audio_path" id="audio_path" style="display: none;"required="" />
+          <input class="form-control" name="num_steps" id="num_steps" style="display: none;"required="" />
+          <input class="form-control" name="complete" id="complete" style="display: none;"required="" />
+        </b>
+      </div>
+
+
+    </div>
+    
+    </div>
+  </div>
+</section>
+
+
+<script type='text/javascript'>
+  $(document).ready(function () {
+  $('#predefined_steps_submit').attr('disabled',true);
+    $('#predefined_steps').keyup(function(){
+        if($(this).val().length !=0)
+            $('#predefined_steps_submit').attr('disabled', false);            
+        else
+            $('#predefined_steps_submit').attr('disabled',true);
+    });
+  $(".record_div").hide();
+  function reset_values() {
+  var count = 2;
+  //loop through all divs
+  $("#step_by_step_list > li").slice(1).each(function() {
+    current_rank = $(this).find(".record_step").attr('id').split("_")[2];
+    $(this).find(".record_step").attr('id', "record_step_"+count); //set new count to span
+    $(this).find(".play_step").attr('id', "play_step_"+count);
+    $(this).find(".stop_step").attr('id', "stop_step_"+count);
+    $(this).find(".remove_step").attr('id', "remove_step_"+count);
+    $(this).find(".record_info").attr('id', "record_info_"+count);
+    audio_recordings["step_"+count] = audio_recordings["step_"+current_rank];
+    if (count != current_rank){
+        delete audio_recordings["step_"+current_rank];
+    }
+    count++; //increment count
+  });
+  }
+  const video = document.querySelector('.scc  video');
+const playbackrate = document.querySelector('.scc input');
+const display = document.querySelector('.scc span');
+const displayvalue = val => {
+  return val + 'x'
+}
+display.innerText = displayvalue(video.playbackRate);
+playbackrate.addEventListener('change', e => {
+  video.playbackRate = playbackrate.value;
+  display.innerText = displayvalue(playbackrate.value);
+});
+    $('#predefined_steps_submit').on('click', function (event) {
+      var predefined_steps = document.getElementById('predefined_steps').value;
+        if (predefined_steps.length > 0 && predefined_steps == parseInt(predefined_steps, 10) && predefined_steps > 0)
+        {
+            $("#predefined_steps_error").text("");
+            $(".record_div").show();
+            for (let i = 1; i < predefined_steps; i++) {
+  				add_new_step();
+            }
+            
+        }
+        else if (predefined_steps.length == 0 || predefined_steps != parseInt(predefined_steps, 10) || predefined_steps <= 0){
+            $("#predefined_steps_error").text("Please enter a valid number of steps (integer greater than 0).");
+        }
+    });
+	var add_new_step = function () {
+	console.log("wth");
+    var stepbystep_ol = document.getElementById("step_by_step_list");
+    var new_step = document.createElement('li');
+    var new_step_number = Number(stepbystep_ol.children[stepbystep_ol.children.length - 1].children[0].id.split("_")[2]) + 1;
+    
+    var record_new_step = document.createElement('a');
+    
+    record_new_step.setAttribute('id', 'record_step_' + new_step_number);
+    record_new_step.setAttribute('class', 'btn btn-info record record_step');
+    record_new_step.setAttribute('href', 'javascript:void(0)');
+    
+    record_new_step.innerHTML = "Record"
+    
+    var stop_new_step = document.createElement('a');
+    
+    stop_new_step.setAttribute('id', 'stop_step_' + new_step_number);
+    stop_new_step.setAttribute('class', 'btn btn-danger hidden stop stop_step');
+    stop_new_step.setAttribute('href', 'javascript:void(0)');
+    
+    stop_new_step.innerHTML = "Stop"
+    
+    var play_new_step = document.createElement('a');
+    
+    play_new_step.setAttribute('id', 'play_step_' + new_step_number);
+    play_new_step.setAttribute('class', 'btn btn-success hidden play play_step');
+    play_new_step.setAttribute('href', 'javascript:void(0)');
+    
+    play_new_step.innerHTML = "Play"
+    
+    var remove_new_step = document.createElement('a');
+    
+    remove_new_step.setAttribute('id', 'remove_step_' + new_step_number);
+    remove_new_step.setAttribute('class', 'btn btn-remove remove remove_step');
+    remove_new_step.setAttribute('href', 'javascript:void(0)');
+    remove_new_step.innerHTML = '<i class="fa fa-minus"></i> Remove';
+    
+    var record_info_new_step = document.createElement('div');
+    record_info_new_step.setAttribute('id', 'record_info_step_' + new_step_number);
+    record_info_new_step.setAttribute('class', 'record_info');
+    
+    new_step.appendChild(record_new_step)
+    new_step.appendChild(stop_new_step)
+    new_step.appendChild(play_new_step)
+    new_step.appendChild(remove_new_step)
+    new_step.appendChild(record_info_new_step)
+    
+    stepbystep_ol.appendChild(new_step);
+    
+    audio_recordings['step_' + new_step_number] = null;
+    disable_save_button(saveButton);
+    
+    var recordButton = $("#record_step_" + new_step_number);
+    var stopButton = $("#stop_step_" + new_step_number);
+    var playButton = $("#play_step_" + new_step_number);
+    var removeButton = $("#remove_step_" + new_step_number);
+    //var previousremoveButton = $("#remove_step_" + (new_step_number-1));
+    
+    var tag_error = $('#tag_error');
+    var record_info = $('#record_info_step_' + new_step_number);
+    //var savedAudioMessagesContainer = $('#saved-audio-messages');
+    var recorder;
+    var audio;
+    recordButton.on('click', async (event) => {
+      tag_error.removeClass('alert alert-danger');
+      tag_error.text('');
+      // recordButton.attr('disabled', true);
+      // stopButton.removeAttr('disabled');
+      // playButton.attr('disabled', true);
+      // saveButton.attr('disabled', true);
+      
+      $(".record").attr("disabled", true);
+      $(".play").attr("disabled", true);
+      $(".add").attr("disabled", true);
+      $(".remove").attr("disabled", true);
+      disable_button(removeButton);
+      disable_button(recordButton);
+      enable_button(stopButton);
+      disable_button(playButton);
+      disable_save_button(saveButton);
+
+      if (!recorder) {
+        recorder = await recordAudio(record_info);
+      }
+      recorder.start();
+    });
+
+    stopButton.on('click', async () => {
+      // recordButton.removeAttr('disabled');
+      // stopButton.attr('disabled', true);
+      // playButton.removeAttr('disabled');
+      // saveButton.removeAttr('disabled');
+      audio = await recorder.stop();
+      audio_recordings[recordButton.attr('id').split("_").slice(1).join("_")] = audio;
+      $(".record").attr("disabled", false);
+      $(".play").attr("disabled", false);
+      $(".add").attr("disabled", false);
+      $(".remove").attr("disabled", false);
+      
+      enable_button(removeButton);
+      enable_button(recordButton);
+      recordButton.removeClass("btn-info");
+      recordButton.addClass("btn-primary");
+      disable_button(stopButton);
+      enable_button(playButton);
+      enable_save_button(saveButton);
+      record_info.removeClass("alert alert-info");
+      record_info.text('');
+    });
+    
+    playButton.on('click', () => {
+      audio.play();
+    });
+    
+    removeButton.on('click', () => {
+       delete audio_recordings[recordButton.attr('id').split("_").slice(1).join("_")];
+       removeButton.parent().remove();
+       reset_values();
+       enable_save_button(saveButton);
+    });
+    
+    }
+    $('#addstepButton').on('click', add_new_step());
+    
+    $("#submitButton").addClass("hidden");
+
+    validateForm = function () {
+      var ans_1 = document.getElementById('audio_path').value;
+      var error_message = "Failed to upload, please try again!";
+      if (ans_1.length <= 2) {
+        $("#tag_error").text(error_message);
+        return false;
+      } else {
+        $("#tag_error").text("");
+        return true;
+      }
+    };
+
+
+    $('#submitButton').on('click', function (event) {
+      validateForm();
+    })
+    
+    var recordAudio = (record_info) =>
+      new Promise(async resolve => {
+        var stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1 } });
+        var options = {
+          audioBitsPerSecond: 128000,
+        }
+        var mediaRecorder = new MediaRecorder(stream, options);
+        let audioChunks = [];
+        mediaRecorder.addEventListener('dataavailable', event => {
+          audioChunks.push(event.data);
+        });
+        var start = () => {
+          record_info.addClass("alert alert-info");
+          record_info.html('Recording in progress <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>');
+          
+          audioChunks = [];
+          mediaRecorder.start(100);//100 ms chunks
+        };
+        var stop = () =>
+          new Promise(resolve => {
+            mediaRecorder.addEventListener('stop', () => {
+              var audioBlob = new Blob(audioChunks, { 'type': 'audio/wav; codecs=pcm' });
+              var audioUrl = URL.createObjectURL(audioBlob);
+              var audio = new Audio(audioUrl);
+              var play = () => audio.play();
+              resolve({ audioChunks, audioBlob, audioUrl, play });
+            });
+            mediaRecorder.stop();
+          });
+        resolve({ start, stop });
+      });
+     $(".record").each(function() {
+        var recordButton = $(this);
+        var stopButton = $(this).siblings('.stop');
+        var playButton = $(this).siblings('.play');
+        
+    	var removeButton = $(this).siblings('.remove');
+        var tag_error = $('#tag_error');
+        var record_info = $(this).siblings('.record_info');
+        //var savedAudioMessagesContainer = $('#saved-audio-messages');
+        var recorder;
+        var audio;
+        recordButton.on('click', async (event) => {
+          tag_error.removeClass('alert alert-danger');
+          tag_error.text('');
+          // recordButton.attr('disabled', true);
+          // stopButton.removeAttr('disabled');
+          // playButton.attr('disabled', true);
+          // saveButton.attr('disabled', true);
+          $(".record").attr("disabled", true);
+          $(".play").attr("disabled", true);
+          $(".add").attr("disabled", true);
+          $(".remove").attr("disabled", true);
+          
+          disable_button(recordButton);
+      	  disable_button(removeButton);
+          enable_button(stopButton);
+          disable_button(playButton);
+          disable_save_button(saveButton);
+    
+          if (!recorder) {
+            recorder = await recordAudio(record_info);
+          }
+          recorder.start();
+        });
+    
+        stopButton.on('click', async () => {
+          // recordButton.removeAttr('disabled');
+          // stopButton.attr('disabled', true);
+          // playButton.removeAttr('disabled');
+          // saveButton.removeAttr('disabled');
+    
+    
+          audio = await recorder.stop();
+          audio_recordings[recordButton.attr('id').split("_").slice(1).join("_")] = audio;
+          $(".record").attr("disabled", false);
+          $(".play").attr("disabled", false);
+          $(".add").attr("disabled", false);
+          $(".remove").attr("disabled", false);
+          enable_button(recordButton);
+          
+          enable_button(removeButton);
+          recordButton.removeClass("btn-info")
+          recordButton.addClass("btn-primary")
+          disable_button(stopButton);
+          enable_button(playButton);
+          enable_save_button(saveButton);
+    
+          record_info.removeClass("alert alert-info")
+          record_info.text('');
+          
+        });
+        playButton.on('click', () => {
+          audio.play();
+        });
+        removeButton.on('click', () => {
+           delete audio_recordings[recordButton.attr('id').split("_").slice(1).join("_")];
+           removeButton.parent().remove();
+           reset_values();
+           enable_save_button(saveButton);
+    });
+    
+    });
+    
+    var saveButton = $('#save');
+    saveButton.on('click', async () => {
+    if (!check_recordings(audio_recordings)){
+        alert("Failed to submit. Please complete all recordings.");
+    }
+    else{
+          var config = {
+            region: 'us-east-1',
+            pool: 'us-east-1:39b75adf-0c55-42e2-8b41-d002d113a7bc',
+            bucket: 'iral-audio'
+          }
+      
+      AWS.config.region = config.region;
+      // Configure the credentials provider to use your identity pool
+      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: config.pool,
+      });
+
+      var s3 = new AWS.S3({
+        apiVersion: '2006-03-01',
+        params: { Bucket: config.bucket },
+      });
+
+      $("#save").text("uploading..")
+      var workerId = turkGetParam('workerId');
+      var assignmentId = turkGetParam('assignmentId');
+      var hitId = turkGetParam('hitId');
+      //console.log("file key :"+fileKey);
+      var videoName = "";
+      //console.log("${video_url}");
+      var arr = "${video_url}".split("/");
+      if (arr.length >= 2) {
+        videoName = arr[arr.length - 3] +  "_" + arr[arr.length - 2]
+        //var fileKey = "test";
+      }
+      num_steps = -2
+      dirname = 'scenario_descriptions/new_hits/' + workerId + '/' + videoName + '-' + hitId + '-' + assignmentId + '/'
+      var promises=[];
+      for ( [filename, audio] of Object.entries(audio_recordings)) {
+          
+          //prepare file name here 
+          var file; //= audio.audioBlob;
+          
+          try {
+            file = audio.audioBlob;
+          } catch (error) {
+            console.log(error);
+            handle_error(error);
+          }
+
+          var fileKey = dirname + filename;
+    	  promises.push(s3.upload({
+            Key: fileKey,
+            Body: file,
+            ContentType: file.type,
+            ACL: 'bucket-owner-full-control'
+          }).promise());
+          num_steps ++;
+      }
+       Promise.all(promises).then(function(data){
+            $('#audio_path').val(dirname);
+      $('#num_steps').val(num_steps);
+      $('#complete').val(1);
+      $("#save").text("Submit");
+      //$('#save').attr('disabled', true);
+      $('#submitButton').trigger('click');
+        }).catch(function(err){
+            console.log(err);
+            if ($("#save").hasClass("tried_once")){
+                    $('#audio_path').val(dirname);
+                    $('#num_steps').val(num_steps);
+                    $('#complete').val(0);
+                    $("#save").text("Submit");
+                    //$('#save').attr('disabled', true);
+                    $('#submitButton').trigger('click');
+            }
+            else{
+                 alert("Failed to upload. Please retry.");
+                 $("#save").addClass("tried_once");
+                 $("#save").text("Re-upload");
+            }
+        })  
+        
+      
+    }
+    });
+
+    
+    var disable_button = function(button) {
+      button.attr('disabled', true);
+      // button.removeClass();
+      button.addClass("hidden");
+    }
+
+    var enable_button = function(button){
+      button.removeAttr('disabled');
+      button.removeClass("hidden");
+    }
+    
+    var check_recordings = function(dict) {
+        return $.map(dict, function(value, key) { return key }).length == $.map(dict, function(value, key) { return value }).length;
+    };
+    var audio_recordings = {};
+    var record_buttons = document.getElementsByClassName("record");
+    for (var i = 0; i < record_buttons.length; i++) {
+       audio_recordings[record_buttons.item(i).id.split("_").slice(1).join("_")] = null;
+    }
+    var disable_save_button = function(button) {
+      button.attr('disabled', true);
+      $(".save_div label").show();
+    }
+    var enable_save_button = function(button){
+      if (check_recordings(audio_recordings)) {
+          button.removeAttr('disabled');
+          $(".save_div label").hide();
+      }
+    } 
+
+    var handle_error = function(event){
+      console.log(event);
+      $('#tag_error').text("Error in recording, please check your microphone permissions or try using latest version of Chrome or Firefox.");
+      $('#tag_error').addClass('alert alert-danger');
+      // recordButton.removeAttr('disabled');
+      // stopButton.attr('disabled', true);
+      // playButton.attr('disabled', true);
+      // saveButton.attr('disabled', true);
+    }
+    window.addEventListener('unhandledrejection', function (event) {
+      handle_error(event);
+    });
+
+  });
+
+</script>
